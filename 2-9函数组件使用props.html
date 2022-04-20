@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="test1"></div>
+
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+		<!-- 生产环境中不建议使用 -->
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+		<!-- 引入prop-types 用于对组件标签属性进行限制 PropTypes-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.min.js"></script>
+
+        <script type="text/babel">
+            // 函数组件只能用props    stats,refs函数组件不能用
+            function Person(props){
+                console.log(props);
+                const {name,age,sex} = props;
+                return (
+                    <ul>
+                        <li>名字:{name}</li>
+                        <li>年龄:{age + 1}</li>
+                        <li>性别:{sex}</li>
+                    </ul>
+                )
+            }
+            Person.propTypes = {
+                name:PropTypes.string.isRequired,// 限制name必传,且为字符串
+                sex:PropTypes.string,	// 限制sex为字符串
+                age:PropTypes.number,	// 限制age为数值
+            }
+            // 默认的标签属性值
+            Person.defaultProps = {
+                sex:'不男不女',	//指定默认值
+                age:18
+            }
+            ReactDOM.render(<Person name='张三'/>,document.getElementById('test1'));
+        </script>
+    </body>
+</html>

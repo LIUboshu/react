@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        
+    </head>
+    <body>
+        <div id="test"></div>
+
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        <script type="text/babel">
+            // 创建实例对象
+            class Weather extends React.Component{
+                // 构造器调用了  1  次
+                constructor(props){
+                    super(props);
+                    // 初始化状态
+                    this.state = {
+                        isHot:false,
+                        wind:'微风'
+                    }
+                    // 解决changeWeather中this指向问题  bind()
+                    this.changeWeather1 = this.changeWeather.bind(this);
+                }
+                // render 调用了 1 + n次  1是初始化的那次  n是状态更新的次数
+                render(){
+                    // 读取状态
+                    const {isHot,wind}= this.state;
+                    return <h1 onClick={this.changeWeather1}>今天是{this.state.isHot ? '晴天' : '阴天'},{wind}</h1>
+                }
+                // changeWeather 点击此调用几次
+                changeWeather(){
+                    // changeWeather放在哪? Weather的原型对象上,供实例使用
+                    // 由于changeWeather是作为onClick的回调,所以不是通过实例调用的,是直接调用
+                    // 类中的方法默认开启了局部的严格模式,所以changeWeather中的this为undefined
+                    console.log(this);
+                    const isHot = this.state.isHot;// 获取原来的isHot值
+                    this.setState({isHot : !isHot});// 严重注意:!!!状态必须通过setState进行更新,且更新合并,不是替换
+                }
+            }
+            ReactDOM.render(<Weather/>,document.getElementById("test"));
+        </script>
+    </body>
+</html>

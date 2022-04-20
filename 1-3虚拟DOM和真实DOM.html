@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="test"></div>
+        <div id="demo"></div>
+        
+        <script type="text/babel">
+            const VDOM = (/* 此处这里不需要写引号,因为不是字符串 */
+                <h1 id="title">
+                    <span>hello,react</span>
+                </h1>
+            )
+            // 2. 渲染虚拟DOM到页面
+            ReactDOM.render(VDOM,document.getElementById('test'));
+
+            console.log('虚拟DOM',VDOM);    // 虚拟DOM Object
+            console.log(typeof VDOM);   // Object
+            console.log(VDOM instanceof Object);    // true
+            
+
+            const TDOM = document.getElementById('demo');
+            console.log('真实dom',TDOM);    // 真实dom <div id=​"demo">​</div>​
+
+            debugger
+
+            /* 
+                关于虚拟DOM
+                    1.本质是Object类型的对象(一般对象)
+                    2.虚拟DOM比较'轻',因为虚拟DOM是react内部在用,无需真实dom上那么多的属性
+                    3.虚拟dom最终会被react转化为真实dom,呈现在页面上
+            
+            */
+        </script>
+    </body>
+    
+<html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     

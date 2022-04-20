@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="test"></div>
+
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+		<!-- 生产环境中不建议使用 -->
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        
+        <script type="text/babel">
+            /* 
+                React的生命周期从广义上分为三个阶段：挂载mount、渲染render、卸载unmount
+            
+            */
+            class Life extends React.Component{
+                state = {
+                    opacity:1
+                }
+                deleteBtn = () =>{
+                    // 卸载组件
+                    ReactDOM.unmountComponentAtNode(document.getElementById('test'));
+                }
+                // 初始化渲染 状态更新之后
+                render(){
+                    return(
+                        <div>
+                            <h1 style={{opacity:this.state.opacity}}>Hello World</h1>
+                            <button onClick={this.deleteBtn}>点击删除组件</button>
+                        </div>
+                    )
+                }
+                // 组件挂完毕   组件第一次渲染完成，此时dom节点已经生成，可以在这里调用ajax请求，返回数据setState后组件会重新渲染
+                componentDidMount(){
+                    this.time = setInterval(()=>{
+                        // 获取原状态
+                        // let {opacity} = this.state;
+
+                        //减小0.1
+                        this.state.opacity -= 0.1;
+                        if(this.state.opacity <= 0){
+                            this.state.opacity = 1
+                        }
+                        let opacity = this.state.opacity
+                        // 设置新的透明度
+                        this.setState({opacity})
+                    },200)
+                }
+                //组件将要卸载  在此处完成组件的卸载和数据的销毁。
+                componentWillUnmount(){
+                    // 清除定时器
+                    clearInterval(this.time);
+                    console.log(this);
+                }
+            }
+            ReactDOM.render(<Life/>,document.getElementById('test'));
+        </script>
+    </body>
+</html>

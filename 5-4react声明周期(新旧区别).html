@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="test"></div>
+        <!-- 这里全部更改为17.0.1版本的react -->
+        <script crossorigin src="https://unpkg.com/react@17.0.1/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@17.0.1/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        
+        <script type="text/babel">
+            /* 
+                这些生命周期添加 “UNSAFE_” 前缀
+                    componentWillMount
+                    componentWillReceiveProps
+                    componentWillUpdate
+                    将在即将发布的版本中为这些生命周期添加 “UNSAFE_” 前缀。（这里的 “unsafe” 不是指安全性，而是表示使用这些生命周期的代码在 React 的未来版本中更有可能出现 bug，尤其是在启用异步渲染之后。）
+            
+
+                新的生命周期和旧的生命周期的区别
+                    废弃了componentWillMount/componentWillReceiveProps/componentWillUpdate的钩子
+                    有提出了getDerivedStateFromProps/getSnapshotBeforeUpdate这两个钩子
+
+            */
+            // 创建组件
+            class Count extends React.Component{
+                // 构造器
+                constructor(props){
+                    console.log('Count---constructor');
+                    super(props);
+                    // 初始化状态
+                    this.state={num:1}
+                }
+                // 这些生命周期添加 “UNSAFE_” 前缀
+                // 组件将要挂载的钩子
+                UNSAFE_componentWillMount(){
+                    console.log('Count---componentWillMount');
+                }
+                // 组件挂载完毕的钩子
+                componentDidMount(){
+                    console.log('Count---componentDidMount')
+                }
+                // 加1按钮的回调函数
+                addBtn = () =>{
+                    // 获取原状态
+                    const {num} = this.state;
+                    // 更新状态
+                    this.setState({num:num+1});
+                }
+                
+                // 删除组件回调函数
+                deleteBtn = () =>{
+                    ReactDOM.unmountComponentAtNode(document.getElementById('test'));
+                }
+                // 强制更新的回调
+                force = () =>{
+                    // 强制更新
+                    this.forceUpdate();
+                }
+                // 组件将要卸载的钩子
+                componentWillUnmount(){
+                    console.log('Count---componentWillUnmount')
+                }
+                // 控制组件更新的"阀门"
+                shouldComponentUpdate(){
+                    console.log('Count---shouldComponentUpdate');
+                    return true;
+                }
+                // 这些生命周期添加 “UNSAFE_” 前缀
+                // 组件将要重新更新的钩子
+                UNSAFE_componentWillUpdate(){
+                    // 强制更新
+                    console.log('Count---componentWillUpdate');
+                }
+                // 组件更新完毕的钩子
+                componentDidUpdate(){
+                    console.log('Count---componentDidUpdate');
+                }
+                render(){
+                    console.log('Count---render');
+                    const {num} = this.state;
+                    return(
+                        <div>
+                            <h1>当前和为:{num}</h1>
+                            <button onClick={this.addBtn}>点我+1</button>
+                            <button onClick={this.deleteBtn}>卸载组件</button>
+                            <button onClick={this.force}>不更改任何状态中的数据,强制更新</button>
+                        </div>
+                    )
+                }
+            }
+
+            // 父组件
+            class A extends React.Component{
+                state = {carName:"奔驰"}
+                changeCar = () =>{
+                    const {carName} = this.state;
+                    this.setState({carName:'宝马'})
+                }
+                render(){
+                    return(
+                        <div>
+                            <h1>这是A组件(父组件)</h1>
+                            <button onClick={this.changeCar}>换车</button>
+                            <B carName={this.state.carName}/>
+                        </div>
+                    )
+                }
+            }
+            // 子组件
+            class B extends React.Component{
+                // B组件只要挂载页面就调用
+                componentDidMount(){
+                    console.log('B---componentDidMount');
+                }
+                // 这些生命周期添加 “UNSAFE_” 前缀
+                // 组件将要接收参数    第一次传的值不算 ,父组件render之后才调
+                UNSAFE_componentWillReceiveProps(props){
+                    console.log('B---componentWillReceiveProps',props);
+                }
+                // 控制组件更新的"阀门"
+                shouldComponentUpdate(){
+                    console.log('B---shouldComponentUpdate');
+                    return true;
+                }
+                //这些生命周期添加 “UNSAFE_” 前缀
+                // 组件将要重新更新的钩子
+                UNSAFE_componentWillUpdate(){
+                    console.log('B---componentWillUpdate');
+                }
+                // 组件更新完毕的钩子 
+                componentDidUpdate(){
+                    console.log('B---componentDidUpdate');
+                }
+                render(){
+                    console.log('B---render')
+                    return(
+                        <div>
+                            <h1>这是B组件(子组件),接收到的车是:{this.props.carName}</h1>
+                        </div>
+                    )
+                }
+            }
+            // 渲染组件   这里输入Count和A来切换组件   看效果
+            ReactDOM.render(<A/>,document.getElementById('test'))
+        </script>
+    </body>
+</html>

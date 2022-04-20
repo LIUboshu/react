@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .list{
+                width: 200px;
+                height: 150px;
+                background-color: cyan;
+                overflow: auto;
+            }
+            .news{
+                height: 30px;
+                border-bottom: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="test"></div>
+
+        <!-- 这里全部更改为17.0.1版本的react -->
+        <script crossorigin src="https://unpkg.com/react@17.0.1/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@17.0.1/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script type="text/babel">
+            class NewList extends React.Component{
+                state={newArr:[]}
+                myRef = React.createRef();
+                // 组件挂载完毕的钩子
+                componentDidMount(){
+                    setInterval(()=>{
+                        // 获取原状态
+                        const {newArr} = this.state;
+                        // 模拟新闻列表
+                        const news = '新闻' + (newArr.length + 1);
+                        // 更新状态 {newArr:[新生成的,...之前的]}
+                        this.setState({newArr:[news,...newArr]})
+                    },1000)
+                }
+                getSnapshotBeforeUpdate(){
+                    console.log(this.myRef);//{current: div.list} 必须通过.current才能找到元素
+                    return this.myRef.current.scrollHeight;
+                }
+                // 组件更新完毕的钩子
+                componentDidUpdate(preProps,preState,snapshotHeight){
+                    console.log('Count---componentDidUpdate',preProps,preState,snapshotHeight);
+                    this.myRef.current.scrollTop += this.myRef.current.scrollHeight - snapshotHeight
+                }
+                render(){
+                    return(
+                        <div ref={this.myRef} className="list">
+                            {
+                                // map数组遍历
+                                this.state.newArr.map((item,index)=>{
+                                   return <div key={index} className="news">{item}</div>
+                                })
+                            }
+                        </div>
+                    )
+                }
+            }
+            ReactDOM.render(<NewList/>,document.getElementById("test"));
+        </script>
+    </body>
+</html>

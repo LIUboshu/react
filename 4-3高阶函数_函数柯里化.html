@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="test"></div>
+
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+		<!-- 生产环境中不建议使用 -->
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        <script type="text/babel">
+            /* 
+                高阶函数:如果一个函数符合下面2个规范中的任何一个,那该函数就是高阶函数
+                        1.若A函数,接收的参数是一个函数,那么A就可以称之为高阶函数
+                        2.若A函数,调用的返回值依然是一个函数,那么A就可以称之为高阶函数
+                        常见的高阶函数:Promise/setTimeout/arr.map()
+
+                函数的柯里化:通过函数调用继续返回函数的方式,实现多次接收参数最后统一处理的函数编码形式
+            */
+            // 创建组件
+            class Login extends React.Component{
+                // 初始化状态
+                state = {
+                    username:'',
+                    password:''
+                }
+                saveFormData = (dataType)=>{
+                    console.log(dataType);//直接调用的   打印 username和password
+                    // 这里如果不return函数   将返回undifend
+                    // 这里必须返回一个函数作为onChange的回调
+                    return (event)=>{
+                        console.log(dataType,event.target.value);
+                        // 这里的dataType事变量   要用中括号[]  包起来得方法获取变量
+                        this.setState({[dataType]:event.target.value});// 这里做了统一的处理
+                    }
+                }
+                handleSubmit = (event)=>{
+                    event.preventDefault();// 取消默认事件  w3c的方法是e.preventDefault()，IE则是使用e.returnValue = false;
+                    console.log(this);
+                    const {username,password} = this.state;
+                    alert("账号:"+username+",密码:"+password+"")
+                }
+                render(){
+                    return(
+                        <form action="https://www.baidu.com" onSubmit={this.handleSubmit}>
+                            账号:<input onChange={this.saveFormData('username')} type="text" name="username"/>
+                            密码:<input onChange={this.saveFormData('password')} type="password" name="password"/>
+                            <button>登陆</button>
+                        </form>
+                    )
+                }
+            }
+            ReactDOM.render(<Login/>,document.getElementById("test"));
+        </script>
+    </body>
+    <script>
+        /* function sum(a,b,c){
+            return a + b +c
+        } 
+        const result = sum(1,2,3);
+        */
+        // 演示函数柯里化
+        function sum(a){
+            return (b)=>{
+                return (c)=>{
+                    return a + b + c
+                }
+            }
+        }
+        const result = sum(1)(2)(3);
+        console.log(result); 
+    </script>
+</html>

@@ -1,0 +1,8 @@
+.parent{
+    background-color: salmon;
+    padding: 10px;
+}
+.child{
+    background-color: seagreen;
+    padding: 10px;
+}

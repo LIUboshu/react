@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="test"></div>
+
+        <!-- 这里全部更改为17.0.1版本的react -->
+        <script crossorigin src="https://unpkg.com/react@17.0.1/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@17.0.1/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script type="text/babel">
+            /* 
+                面试题:
+                    1.react/vue中的key有什么作用?(key的内部原理是什么?)
+                    2.为什么遍历列表时,key最好不要用index
+
+                一.虚拟DOM中的key的作用
+                    1.简单的说:key是虚拟dom对象的表示,在更新显示时key起着极其重要的作用
+                    2.详细的说:当状态中的数据发生变化时,react会根据[新数据]生成[新的虚拟dom],随着React进行[新虚拟dom]与[旧虚拟dom]的diff比较,比较规则如下:
+                        a.旧虚拟dom中找到了与新虚拟dom相同的key:
+                            <1>若虚拟dom中内容没变,直接使用之前的真实dom
+                            <2>若虚拟dom中内容变了,则生成新的真实dom,随后替换掉页面中之前的真实dom
+                        b.旧虚拟dom中未找到与新虚拟dom相同的key
+                            根据数据创建新的真实dom,随后渲染到页面
+                二.用index作为key可能会引发的问题
+                    1.若数据进行:逆序添加/逆序删除等破坏顺序操作:
+                        会产生没有必要的真实dom更新 ===> 界面效果没有问题,但是效率低
+                    2.如果结构中还包含输入类的dom:
+                        会产生错误dom更新 ===> 界面有问题
+                    3.注意!如果不存在对数据的逆序添加/逆序删除等破坏顺序操作
+                        仅用与渲染列表用于展示,使用index作为key是没有问题的
+                三.开发中如果选择key?
+                    1.最好使用每条数据的唯一标识作为key,比如id,手机号,身份证号,学号等唯一值
+                    2.如果确定只是简单的展示数据,用index也是可以的
+            */
+           /* 
+                使用idnex索引值作为key
+                    初始数据:
+                        {id:1,name:'张三',age:18},
+                        {id:2,name:'李四',age:19},
+                        {id:3,name:'王五',age:20}
+                    初始的虚拟dom
+                        <li key=0>张三---18<input type="text"/></li>
+                        <li key=1>李四---19<input type="text"/></li>
+                        <li key=2>王五---20<input type="text"/></li>
+                    更新后的数据
+                        {id:4,name:'王大麻子',age:40}
+                        {id:1,name:'张三',age:18},
+                        {id:2,name:'李四',age:19},
+                        {id:3,name:'王五',age:20}
+                    更新后的虚拟dom
+                        <li key=0>王大麻子---40<input type="text"/></li>
+                        <li key=1>张三---18<input type="text"/></li>
+                        <li key=2>李四---19<input type="text"/></li>
+                        <li key=3>王五---20<input type="text"/></li>
+                -------------------------------------------------
+                使用id唯一标识作为key
+                    初始数据:
+                        {id:1,name:'张三',age:18},
+                        {id:2,name:'李四',age:19},
+                        {id:3,name:'王五',age:20}
+                    初始的虚拟dom
+                        <li key=1>张三---18<input type="text"/></li>
+                        <li key=2>李四---19<input type="text"/></li>
+                        <li key=3>王五---20<input type="text"/></li>
+                    更新后的数据
+                        {id:4,name:'王大麻子',age:40}
+                        {id:1,name:'张三',age:18},
+                        {id:2,name:'李四',age:19},
+                        {id:3,name:'王五',age:20}
+                    更新后的虚拟dom
+                        <li key=4>王大麻子---40<input type="text"/></li>
+                        <li key=1>张三---18<input type="text"/></li>
+                        <li key=2>李四---19<input type="text"/></li>
+                        <li key=3>王五---20<input type="text"/></li>
+           */
+            class Person extends React.Component{
+                state={
+                    person:[
+                        {id:1,name:'张三',age:18},
+                        {id:2,name:'李四',age:19},
+                        {id:3,name:'王五',age:20}
+                    ]
+                }
+                add = ()=>{
+                    const {person} = this.state;
+                    const p = {id:person.length+1,name:'王大麻子',age:40}
+                    this.setState({person:[p,...person]})
+                }
+                render(){
+                    return(
+                        <div>
+                            <h1>展示人员信息</h1>
+                            <button onClick={this.add}>添加王大麻子</button>
+                            <h3>使用index索引作为key</h3>
+                            <ul>
+                                {
+                                    this.state.person.map((item,index)=>{
+                                        return <li key={index}>{item.name}---{item.age}<input type="text"/></li>
+                                    })
+                                }
+                            </ul>
+                            <hr/>
+                            <h3>使用id(数据唯一标识)作为key</h3>
+                            <ul>
+                                {
+                                    this.state.person.map((item,index)=>{
+                                        return <li key={item.id}>{item.name}---{item.age}<input type="text"/></li>
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    )
+                }
+            }
+            ReactDOM.render(<Person/>,document.getElementById("test"));
+        </script>
+    </body>
+</html>

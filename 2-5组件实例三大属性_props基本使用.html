@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title></title>
+	</head>
+	<body>
+		<div id="test1"></div>
+		<div id="test2"></div>
+		<div id="test3"></div>
+		<div id="test4"></div>
+		<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+		<!-- 生产环境中不建议使用 -->
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+		<script type="text/babel">
+			// 创建组件
+			class Person extends React.Component{
+				render(){
+					console.log(this);//Person {props: {…}, context: {…}, refs: {…}, updater: {…}, _reactInternalFiber: FiberNode, …}
+					const {name,age,sex} = this.props;
+					return (
+						<ul>
+							<li>名字:{name}</li>
+							<li>性别:{age + 1}</li>
+							<li>年龄:{sex}</li>
+						</ul>
+					)
+				}
+			} 
+			
+			// 渲染组件
+			ReactDOM.render(<Person name="tom" age={18} sex="女"/>,document.getElementById("test1"));
+			ReactDOM.render(<Person name="jerry" age="19" sex="男"/>,document.getElementById("test2"));
+			ReactDOM.render(<Person name="老刘" age="30" sex="女"/>,document.getElementById("test3"));
+
+
+			// 批量传值props
+			const p = {name:'老张',age:18,sex:'女'};
+			// 这里的 {...p}  {}是react写js代码的  构造字面量对象时使用展开语法必须加{}
+			ReactDOM.render(<Person {...p}/>,document.getElementById("test4"));
+		</script>
+	</body>
+</html>
